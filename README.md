@@ -6,5 +6,5 @@ $${\color{green}Temel\space Uygulama \space Altyapısı}$$
 ### Coroutines 💥 
 ### ViewModel 🔰 
 ### Data Binding 👻 
-### Coin Image Process 🌆 
+### Coil Image Process 🌆 
 ###
