@@ -15,4 +15,8 @@ data class USD(
     val tvl: Any,
     val volume_24h: Double,
     val volume_change_24h: Double
-)
+){
+   fun getFormattedPrice():String{
+       return String.format("$%,.2f", price)
+   }
+}

@@ -14,6 +14,7 @@ abstract class BaseFragment<VB:ViewBinding, VM:ViewModel> (private val bindingIn
     protected val binding: VB get() = _binding as VB // protected: sadece bu sınıfı kullanan yerden binding çağrılabilir.
 
     protected abstract val viewModel : VM
+    protected abstract fun onCreate()
     protected abstract fun onCreateFinished()
     protected abstract fun initializeListeners()
     protected abstract fun observeEvents()
@@ -25,7 +26,7 @@ abstract class BaseFragment<VB:ViewBinding, VM:ViewModel> (private val bindingIn
             throw java.lang.IllegalArgumentException("Binding null")
         }
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,6 +36,10 @@ abstract class BaseFragment<VB:ViewBinding, VM:ViewModel> (private val bindingIn
         observeEvents()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onCreate()
+    }
     override fun onDestroy() {
         super.onDestroy()
         _binding = null // for memory best practice

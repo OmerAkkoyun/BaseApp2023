@@ -28,11 +28,13 @@ android {
 
             debuggable false
             buildConfigField "String", "BASE_URL", '"https://pro-api.coinmarketcap.com/"'
+            buildConfigField "String", "BASE_IMAGE_URL", '"https://s2.coinmarketcap.com/static/img/coins/128x128/"'
         }
         debug {
 
             debuggable true
             buildConfigField "String", "BASE_URL", '"https://pro-api.coinmarketcap.com/"'
+            buildConfigField "String", "BASE_IMAGE_URL", '"https://s2.coinmarketcap.com/static/img/coins/128x128/"'
             applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
 
@@ -97,4 +99,6 @@ dependencies {
 
     // Coil
     implementation('io.coil-kt:coil:2.2.2')
+
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
