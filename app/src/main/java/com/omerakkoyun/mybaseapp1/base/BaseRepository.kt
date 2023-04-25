@@ -23,7 +23,7 @@ abstract class BaseRepository {
                         NetworkResult.Error(false, errorBodyParser(throwable.response()?.errorBody()?.string()))
                     }
                     // internet baglantisi hatasi
-                    else -> NetworkResult.Error(true, throwable.localizedMessage)
+                    else -> NetworkResult.Error(true, "Lütfen İnternet Bağlantınızı Kontrol Edin")
                 }
             }
         }

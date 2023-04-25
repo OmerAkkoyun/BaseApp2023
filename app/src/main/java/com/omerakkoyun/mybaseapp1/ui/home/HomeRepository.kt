@@ -12,7 +12,7 @@ class HomeRepository @Inject constructor(private val apiFactory: ApiFactory): Ba
         return safeApiRequest {
             apiFactory.getCoins(apiKey,limit)
         }
-        
+
     }
 
 }
