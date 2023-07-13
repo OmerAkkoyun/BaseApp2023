@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.omerakkoyun.mybaseapp1.base.BaseFragment
@@ -11,18 +12,34 @@ import com.omerakkoyun.mybaseapp1.databinding.FragmentHomeBinding
 import com.omerakkoyun.mybaseapp1.models.cryptoResponse.Data
 import com.omerakkoyun.mybaseapp1.utils.Constant.API_KEY
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHomeBinding::inflate) {
 
     override val viewModel by viewModels<HomeViewModel>()
+    private lateinit var  adapter : CoinRecyclerViewAdapter
 
 
     override fun onCreate() {
-        viewModel.getCoins(API_KEY, "18")
+
     }
     override fun onCreateFinished() {
+        adapter = CoinRecyclerViewAdapter(object : ItemClickListener {
+            override fun onItemClick(coin: Data) {
+                // detay ekranına git
+                val navigation = HomeFragmentDirections.actionHomeFragmentToCoinDetailsFragment(coin.symbol)
+                Navigation.findNavController(requireView()).navigate(navigation)
+            }
+        })
+        binding.rvCoins.adapter = adapter
 
+        viewModel.getCoins()
+        fetchCoins()
     }
 
     override fun initializeListeners() {
@@ -33,11 +50,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHo
         with(viewModel) {
 
             // coins
-            coins.observe(viewLifecycleOwner, Observer { response ->
+           /* pagerLiveData.observe(viewLifecycleOwner, Observer { response ->
                 response?.let { res ->
-                    setCoinsAdapterData(res.data)
+                   adapter.submitData(viewLifecycleOwner.lifecycle,res)
                 }
-            })
+            })*/
+
+
 
             //loading
             isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
@@ -53,19 +72,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHo
         }
     }
 
-    private fun setCoinsAdapterData(coinDataList: List<Data>) {
+    private fun fetchCoins() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.getCoins().collectLatest { pagingData ->
 
-        val adapter = CoinRecyclerViewAdapter(object : ItemClickListener {
-            override fun onItemClick(coin: Data) {
-                // detay ekranına git
-                val navigation = HomeFragmentDirections.actionHomeFragmentToCoinDetailsFragment(coin.symbol)
-                Navigation.findNavController(requireView()).navigate(navigation)
+                adapter.submitData(pagingData)
+
             }
-        })
-
-        binding.rvCoins.adapter = adapter
-        adapter.setCoinDataList(coinDataList)
+        }
     }
-
 
 }
