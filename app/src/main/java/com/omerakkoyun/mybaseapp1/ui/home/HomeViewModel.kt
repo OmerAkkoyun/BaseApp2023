@@ -24,13 +24,15 @@ class HomeViewModel @Inject constructor(private val homeRepository: HomeReposito
     var pagerLiveData: LiveData<PagingData<Data>> = MutableLiveData()
 
 
-    fun getCoinaaa()  {
+    // with live data
+    fun getCoinTest()  {
        pagerLiveData =   Pager(
             config = PagingConfig(pageSize = 10),
             pagingSourceFactory = {CoinPagingSource(homeRepository)})
             .liveData.cachedIn(viewModelScope)
     }
 
+    // with flow
     fun getCoins(): Flow<PagingData<Data>> {
         return Pager(config = PagingConfig(pageSize = 20)) {
             CoinPagingSource(homeRepository)
