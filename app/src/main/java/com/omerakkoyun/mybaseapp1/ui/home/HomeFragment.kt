@@ -1,5 +1,7 @@
 package com.omerakkoyun.mybaseapp1.ui.home
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -19,16 +21,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHomeBinding::inflate) {
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>() {
 
-    override val viewModel by viewModels<HomeViewModel>()
+
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentHomeBinding {
+        return  FragmentHomeBinding.inflate(inflater,container,false)
+    }
+
+    override fun initViewModel(): Class<HomeViewModel> {
+        return HomeViewModel::class.java
+    }
+
     private lateinit var  adapter : CoinRecyclerViewAdapter
 
 
     override fun onCreate() {
-
-    }
-    override fun onCreateFinished() {
         adapter = CoinRecyclerViewAdapter(object : ItemClickListener {
             override fun onItemClick(coin: Data) {
                 // detay ekranına git
@@ -36,9 +43,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(FragmentHo
                 Navigation.findNavController(requireView()).navigate(navigation)
             }
         })
+    }
+    override fun onCreateFinished() {
+
         binding.rvCoins.adapter = adapter
 
-        viewModel.getCoins()
+
         fetchCoins()
     }
 

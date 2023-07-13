@@ -1,7 +1,9 @@
 package com.omerakkoyun.mybaseapp1.ui.details
 
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -11,8 +13,10 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.omerakkoyun.mybaseapp1.base.BaseFragment
 import com.omerakkoyun.mybaseapp1.databinding.FragmentCoinDetailsBinding
+import com.omerakkoyun.mybaseapp1.databinding.FragmentHomeBinding
 import com.omerakkoyun.mybaseapp1.models.coinDetailsResponse.CoinDetail
 import com.omerakkoyun.mybaseapp1.models.coinDetailsResponse.CoinDetailResponse
+import com.omerakkoyun.mybaseapp1.ui.home.HomeViewModel
 import com.omerakkoyun.mybaseapp1.utils.Constant.API_KEY
 import com.omerakkoyun.mybaseapp1.utils.loadImageFromID
 import com.omerakkoyun.mybaseapp1.utils.loadImageFromURL
@@ -21,10 +25,16 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 @AndroidEntryPoint
-class CoinDetailsFragment : BaseFragment<FragmentCoinDetailsBinding,CoinDetailsViewModel> (FragmentCoinDetailsBinding::inflate) {
+class CoinDetailsFragment : BaseFragment<FragmentCoinDetailsBinding,CoinDetailsViewModel> () {
 
+    override fun inflateBinding(inflater: LayoutInflater, container: ViewGroup?): FragmentCoinDetailsBinding {
+        return  FragmentCoinDetailsBinding.inflate(inflater,container,false)
+    }
 
-    override val viewModel by viewModels<CoinDetailsViewModel>()
+    override fun initViewModel(): Class<CoinDetailsViewModel> {
+        return CoinDetailsViewModel::class.java
+    }
+
     private val args by navArgs<CoinDetailsFragmentArgs>()
 
 

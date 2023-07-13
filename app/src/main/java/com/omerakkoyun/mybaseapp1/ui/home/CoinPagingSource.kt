@@ -1,5 +1,6 @@
 package com.omerakkoyun.mybaseapp1.ui.home
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.omerakkoyun.mybaseapp1.models.cryptoResponse.Data
@@ -26,10 +27,20 @@ class CoinPagingSource (private val homeRepository: HomeRepository): PagingSourc
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Data> {
         val pageNumber = params.key ?: 1
+        var pageStart: Int = 1
+        val limit = 10
+
         return try {
-            val data = homeRepository.getCoins(Constant.API_KEY,"10")
+
+            if (pageNumber != 1){
+                pageStart = (pageNumber * limit)
+            }
+
+            val data = homeRepository.getCoins(limit = limit.toString(),start = pageStart.toString())
             val prevKey = if (pageNumber == 1) null else pageNumber - 1
             val nextKey = if (data.data?.data!!.isEmpty()) null else pageNumber + 1
+
+
             return LoadResult.Page(data.data.data, prevKey, nextKey)
 
         } catch (e: Exception) {

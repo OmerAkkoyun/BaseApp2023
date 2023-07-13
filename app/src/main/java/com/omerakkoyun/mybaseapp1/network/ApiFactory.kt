@@ -12,7 +12,8 @@ interface ApiFactory {
     @GET("v1/cryptocurrency/listings/latest")
     suspend fun getCoins(
         @Header("X-CMC_PRO_API_KEY") apiKey: String,
-        @Query("limit") limit: String
+        @Query("limit") limit: String,
+        @Query("start") start: String
     ): CryptoResponse
 
 
